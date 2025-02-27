@@ -5,7 +5,7 @@ import pickle
 # Load the saved classification model
 def load_model():
     try:
-        with open("model.pkl", "rb") as f:
+        with open("classifier.pkl", "rb") as f:
             model = pickle.load(f)
         st.success("Model loaded successfully.")
     except FileNotFoundError:
