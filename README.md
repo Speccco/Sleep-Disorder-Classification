@@ -19,18 +19,16 @@ To launch the Streamlit app, use the following command:
 ```bash
 streamlit run app.py
 ```
-
+### ▶️ Try it now!
+```
+https://sleep-disorder-classification.streamlit.app/
+```
 ### 3️⃣ Input Features & Predict
 - Enter values for each feature.
 - Click the **Predict** button to get the model's classification.
 
 ## 📂 Model File
-Make sure the `model.pkl` file (your trained classification model) is available in the project directory. If the file is missing, train and save a model first.
-
-## 🔗 Future Improvements
-- Add more interactivity with dropdowns and sliders.
-- Support multiple model types.
-- Improve visualization for model predictions.
+Make sure the `classifier.pkl` file (your trained classification model) is available in the project directory. If the file is missing, train and save a model first.
 
 ## 📜 License
 This project is licensed under the MIT License - feel free to modify and use it!
