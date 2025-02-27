@@ -31,17 +31,16 @@ def load_scaler():
 def preprocess_input(user_input, scaler):
     # Convert categorical inputs to numerical
     user_input['Gender'] = 1 if user_input['Gender'] == "Male" else 0
-    user_input['BMI'] = float(user_input['BMI'])
-    user_input['Sleep Duration'] = float(user_input['Sleep Duration'])
-    user_input['Stress Level'] = float(user_input['Stress Level'])
-
+    user_input['Occupation'] = hash(user_input['Occupation']) % 100  # Convert to numeric
+    user_input['BMI Category'] = hash(user_input['BMI Category']) % 100  # Convert to numeric
+    
     # Convert dictionary to NumPy array
     input_array = np.array(list(user_input.values())).reshape(1, -1)
-
+    
     # Apply the same scaling used during model training
     if scaler:
         input_array = scaler.transform(input_array)
-
+    
     return input_array
 
 # Streamlit UI
@@ -59,20 +58,27 @@ def main():
             # User Input Form
             st.write("### Enter Your Information")
             user_input = {
-                "Age": st.number_input("Age", min_value=10, max_value=100, value=25),
                 "Gender": st.selectbox("Gender", ["Male", "Female"]),
-                "BMI": st.number_input("BMI", min_value=10.0, max_value=50.0, value=22.0),
+                "Age": st.number_input("Age", min_value=10, max_value=100, value=25),
+                "Occupation": st.text_input("Occupation", "Engineer"),
                 "Sleep Duration": st.number_input("Sleep Duration (hours)", min_value=3.0, max_value=12.0, value=7.0),
+                "Quality of Sleep": st.slider("Quality of Sleep (1-10)", min_value=1, max_value=10, value=7),
+                "Physical Activity Level": st.slider("Physical Activity Level (1-10)", min_value=1, max_value=10, value=5),
                 "Stress Level": st.slider("Stress Level (1-10)", min_value=1, max_value=10, value=5),
+                "BMI Category": st.text_input("BMI Category", "Normal"),
+                "Heart Rate": st.number_input("Heart Rate (bpm)", min_value=40, max_value=200, value=75),
+                "Daily Steps": st.number_input("Daily Steps", min_value=0, max_value=50000, value=5000),
+                "BloodPressure_Upper": st.number_input("Blood Pressure Upper", min_value=80, max_value=200, value=120),
+                "BloodPressure_Lower": st.number_input("Blood Pressure Lower", min_value=50, max_value=130, value=80),
             }
 
             if st.button("Predict"):
                 # Preprocess input (including scaling)
                 processed_input = preprocess_input(user_input, scaler)
-
+                
                 # Make prediction
                 prediction = model.predict(processed_input)
-
+                
                 # Display result
                 st.write("### Prediction Result")
                 st.write(f"The predicted sleep disorder status is: **{prediction[0]}**")
@@ -92,20 +98,29 @@ def main():
         st.write("### Data Visualizations")
         df = pd.read_csv("Sleep_health_and_lifestyle_dataset.csv")
         
-        fig1 = px.bar(df, x='Sleep Disorder', y='Age', color='Gender', title='Age Distribution by Sleep Disorder')
-        st.plotly_chart(fig1)
+        sub_tab1, sub_tab2, sub_tab3, sub_tab4, sub_tab5 = st.tabs([
+            "Age vs Sleep Disorder", "Quality of Sleep vs Stress", "BMI vs Stress",
+            "Sleep Duration vs Stress", "Occupation Distribution"])
+
+        with sub_tab1:
+            fig1 = px.bar(df, x='Sleep Disorder', y='Age', color='Gender', title='Age Distribution by Sleep Disorder')
+            st.plotly_chart(fig1)
         
-        fig2 = px.scatter(df, x='Quality of Sleep', y='Stress Level', color='Gender', title='Quality of Sleep vs. Stress Level')
-        st.plotly_chart(fig2)
+        with sub_tab2:
+            fig2 = px.scatter(df, x='Quality of Sleep', y='Stress Level', color='Gender', title='Quality of Sleep vs. Stress Level')
+            st.plotly_chart(fig2)
         
-        fig3 = px.bar(df, x='BMI Category', y='Stress Level', color='Gender', title='Stress Level by BMI Category')
-        st.plotly_chart(fig3)
+        with sub_tab3:
+            fig3 = px.bar(df, x='BMI Category', y='Stress Level', color='Gender', title='Stress Level by BMI Category')
+            st.plotly_chart(fig3)
         
-        fig4 = px.scatter(df, x='Sleep Duration', y='Stress Level', color='Gender', title='Sleep Duration vs. Stress Level')
-        st.plotly_chart(fig4)
+        with sub_tab4:
+            fig4 = px.scatter(df, x='Sleep Duration', y='Stress Level', color='Gender', title='Sleep Duration vs. Stress Level')
+            st.plotly_chart(fig4)
         
-        fig5 = px.histogram(df, x='Occupation', color='Gender', title='Distribution of Occupation by Gender')
-        st.plotly_chart(fig5)
+        with sub_tab5:
+            fig5 = px.histogram(df, x='Occupation', color='Gender', title='Distribution of Occupation by Gender')
+            st.plotly_chart(fig5)
 
 if __name__ == "__main__":
     main()
