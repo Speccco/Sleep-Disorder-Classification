@@ -1,29 +1,46 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import joblib  # Use joblib for better compatibility
+import pickle  # Using pickle for model & scaler loading
+from sklearn.preprocessing import StandardScaler  # Required for scaling
 
-# Load the saved classification model
+# Load the trained classification model
 def load_model():
     try:
-        model = joblib.load("classifier.pkl")
+        with open("classifier.pkl", "rb") as f:
+            model = pickle.load(f)
         st.success("Model loaded successfully.")
     except FileNotFoundError:
         st.error("No saved model found. Please train and save a model first.")
         model = None
     return model
 
-# Function to preprocess user input
-def preprocess_input(user_input):
-    # Example: Convert categorical inputs to numerical (Modify based on your dataset)
+# Load the trained scaler
+def load_scaler():
+    try:
+        with open("scaler.pkl", "rb") as f:
+            scaler = pickle.load(f)
+        st.success("Scaler loaded successfully.")
+    except FileNotFoundError:
+        st.error("No saved scaler found. Please train and save a scaler first.")
+        scaler = None
+    return scaler
+
+# Function to preprocess user input (converting & scaling)
+def preprocess_input(user_input, scaler):
+    # Convert categorical inputs to numerical
     user_input['Gender'] = 1 if user_input['Gender'] == "Male" else 0
     user_input['BMI'] = float(user_input['BMI'])
     user_input['Sleep Duration'] = float(user_input['Sleep Duration'])
     user_input['Stress Level'] = float(user_input['Stress Level'])
-    
+
     # Convert dictionary to NumPy array
     input_array = np.array(list(user_input.values())).reshape(1, -1)
-    
+
+    # Apply the same scaling used during model training
+    if scaler:
+        input_array = scaler.transform(input_array)
+
     return input_array
 
 # Streamlit UI
@@ -32,8 +49,9 @@ def main():
     st.write("Enter your details, and the model will predict your sleep disorder status.")
 
     model = load_model()  # Load model on app startup
+    scaler = load_scaler()  # Load scaler on app startup
 
-    if model is not None:
+    if model is not None and scaler is not None:
         # User Input Form
         st.write("### Enter Your Information")
         user_input = {
@@ -45,8 +63,8 @@ def main():
         }
 
         if st.button("Predict"):
-            # Preprocess input
-            processed_input = preprocess_input(user_input)
+            # Preprocess input (including scaling)
+            processed_input = preprocess_input(user_input, scaler)
 
             # Make prediction
             prediction = model.predict(processed_input)
