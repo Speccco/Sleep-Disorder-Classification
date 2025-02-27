@@ -43,6 +43,13 @@ def preprocess_input(user_input, scaler):
     
     return input_array
 
+# Mapping output labels to dataset-based sleep disorder labels
+sleep_disorder_labels = {
+    0: "Insomnia",
+    1: "None",
+    2: "Sleep Apnea"
+}
+
 # Streamlit UI
 def main():
     st.title("Sleep Disorder Classification App")
@@ -77,11 +84,12 @@ def main():
                 processed_input = preprocess_input(user_input, scaler)
                 
                 # Make prediction
-                prediction = model.predict(processed_input)
+                prediction = model.predict(processed_input)[0]
+                human_readable_prediction = sleep_disorder_labels.get(prediction, "Unknown Condition")
                 
                 # Display result
                 st.write("### Prediction Result")
-                st.write(f"The predicted sleep disorder status is: **{prediction[0]}**")
+                st.write(f"The predicted sleep disorder status is: **{human_readable_prediction}**")
 
                 # Convert user input to DataFrame and allow download
                 df = pd.DataFrame([user_input])
