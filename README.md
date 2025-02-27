@@ -1,59 +1,36 @@
-# Streamlit Classification Model App
+# Classification Model Prediction App
 
-## 📌 Overview
-This is a **Streamlit-powered web application** that allows users to **input features manually** and get real-time predictions from a **pre-trained classification model**. The app also includes **interactive visualizations** to explore relationships within the dataset.
+Welcome to the **Classification Model Prediction App**, a simple and interactive web application built with Streamlit. This app allows users to input feature values and receive predictions from a pre-trained classification model.
 
-## 🎯 Features
-- **User-friendly interface** to input feature values and get predictions.
-- **Loads a pre-trained classification model (`model.pkl`)**.
-- **Data Visualizations Tab** for insights:
-  - Age vs. Sleep Disorder (categorized by Gender)
-  - Quality of Sleep vs. Stress Level (Regression Plot)
-  - BMI Category vs. Stress Level
-  - Sleep Duration vs. Stress Level
-  - Crosstab analysis of Gender, Occupation, Sleep Disorder, and BMI Category.
+## 🚀 Features
+- **User-Friendly Interface**: Enter input values easily through the web UI.
+- **Instant Predictions**: Get real-time predictions using the saved classification model.
+- **Error Handling**: Provides clear messages if the model file is missing.
 
-## 🚀 How to Run the App
-### **1️⃣ Clone the Repository**
+## 🛠️ Installation & Usage
+### 1️⃣ Install Dependencies
+Ensure you have Python installed, then install the required packages:
 ```bash
-git clone https://github.com/your-username/streamlit-classification-app.git
-cd streamlit-classification-app
+pip install streamlit numpy pickle5
 ```
 
-### **2️⃣ Install Dependencies**
-```bash
-pip install -r requirements.txt
-```
-
-### **3️⃣ Run the Streamlit App**
+### 2️⃣ Run the App
+To launch the Streamlit app, use the following command:
 ```bash
 streamlit run app.py
 ```
 
-## 📂 Project Structure
-```
-streamlit-classification-app/
-│── app.py                   # Main Streamlit App Script
-│── model.pkl                # Pre-trained Classification Model
-│── requirements.txt         # Required Python packages
-│── Sleep_health_and_lifestyle_dataset.csv # Dataset for visualizations
-│── README.md                # Project Documentation (This file)
-```
+### 3️⃣ Input Features & Predict
+- Enter values for each feature.
+- Click the **Predict** button to get the model's classification.
 
-## 📊 Visualizations in the App
-The app provides **interactive plots** generated using **Seaborn and Matplotlib**:
-- **Bar Plots**: Age vs. Sleep Disorder (by Gender), BMI vs. Stress Level
-- **Regression Plots**: Sleep Duration vs. Stress Level
-- **Crosstab Analysis**: Gender, Occupation, and Sleep Disorders
+## 📂 Model File
+Make sure the `model.pkl` file (your trained classification model) is available in the project directory. If the file is missing, train and save a model first.
 
-## 🤝 Contributing
-Feel free to contribute to this project by improving UI, adding more models, or enhancing visualizations. Fork, modify, and submit a **pull request**.
-
-## 🛠️ Technologies Used
-- **Python** (pandas, numpy, scikit-learn)
-- **Streamlit** (for web UI)
-- **Seaborn & Matplotlib** (for visualizations)
-- **pickle** (for model persistence)
+## 🔗 Future Improvements
+- Add more interactivity with dropdowns and sliders.
+- Support multiple model types.
+- Improve visualization for model predictions.
 
 ## 📜 License
 This project is licensed under the MIT License - feel free to modify and use it!
