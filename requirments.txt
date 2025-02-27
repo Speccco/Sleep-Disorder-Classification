@@ -1,7 +1,4 @@
 ﻿streamlit
 numpy
 pandas
-plotly
 scikit-learn
-xyz
---no-cache-dir
