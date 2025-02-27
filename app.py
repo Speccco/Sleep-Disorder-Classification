@@ -2,8 +2,7 @@ import streamlit as st
 import numpy as np
 import pickle
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 # Load the saved classification model
 def load_model():
@@ -46,40 +45,35 @@ def main():
     with tab2:
         st.write("### Data Visualizations")
         df = pd.read_csv("Sleep_health_and_lifestyle_dataset.csv")
-        
-        fig, ax = plt.subplots()
-        sns.barplot(data=df, y='Age', x='Sleep Disorder', hue='Gender', ax=ax)
-        st.pyplot(fig)
-        
-        fig, ax = plt.subplots()
-        sns.regplot(data=df, x='Quality of Sleep', y='Stress Level', ax=ax)
-        st.pyplot(fig)
-        
-        fig, ax = plt.subplots()
-        sns.barplot(data=df, x='BMI Category', y='Stress Level', ax=ax)
-        st.pyplot(fig)
-        
-        fig, ax = plt.subplots()
-        sns.regplot(data=df, x='Sleep Duration', y='Stress Level', ax=ax)
-        st.pyplot(fig)
-        
-        fig, ax = plt.subplots()
-        pd.crosstab(df['Gender'], df['Occupation']).plot(kind='bar', ax=ax)
-        plt.legend(loc='center left', bbox_to_anchor=(1,0.5))
-        plt.tight_layout()
-        st.pyplot(fig)
-        
-        fig, ax = plt.subplots()
-        pd.crosstab(df['Sleep Disorder'], df['Occupation']).plot(kind='bar', ax=ax)
-        plt.legend(loc='center left', bbox_to_anchor=(1,0.5))
-        plt.tight_layout()
-        st.pyplot(fig)
-        
-        fig, ax = plt.subplots()
-        pd.crosstab(df['BMI Category'], df['Occupation']).plot(kind='bar', ax=ax)
-        plt.legend(loc='center left', bbox_to_anchor=(1,0.5))
-        plt.tight_layout()
-        st.pyplot(fig)
+
+        # Plotly Bar Plot - Age vs Sleep Disorder by Gender
+        fig = px.bar(df, x='Sleep Disorder', y='Age', color='Gender', title="Age vs. Sleep Disorder by Gender")
+        st.plotly_chart(fig)
+
+        # Plotly Scatter Plot - Quality of Sleep vs Stress Level
+        fig = px.scatter(df, x='Quality of Sleep', y='Stress Level', title="Quality of Sleep vs. Stress Level", trendline="ols")
+        st.plotly_chart(fig)
+
+        # Plotly Bar Plot - BMI Category vs Stress Level
+        fig = px.bar(df, x='BMI Category', y='Stress Level', title="BMI Category vs. Stress Level")
+        st.plotly_chart(fig)
+
+        # Plotly Scatter Plot - Sleep Duration vs Stress Level
+        fig = px.scatter(df, x='Sleep Duration', y='Stress Level', title="Sleep Duration vs. Stress Level", trendline="ols")
+        st.plotly_chart(fig)
+
+        # Crosstab Visualizations with Plotly
+        gender_vs_occupation = pd.crosstab(df['Gender'], df['Occupation']).reset_index()
+        fig = px.bar(gender_vs_occupation, x='Gender', y=gender_vs_occupation.columns[1:], title="Gender vs. Occupation")
+        st.plotly_chart(fig)
+
+        sleep_disorder_vs_occupation = pd.crosstab(df['Sleep Disorder'], df['Occupation']).reset_index()
+        fig = px.bar(sleep_disorder_vs_occupation, x='Sleep Disorder', y=sleep_disorder_vs_occupation.columns[1:], title="Sleep Disorder vs. Occupation")
+        st.plotly_chart(fig)
+
+        bmi_vs_occupation = pd.crosstab(df['BMI Category'], df['Occupation']).reset_index()
+        fig = px.bar(bmi_vs_occupation, x='BMI Category', y=bmi_vs_occupation.columns[1:], title="BMI Category vs. Occupation")
+        st.plotly_chart(fig)
 
 if __name__ == "__main__":
     main()
